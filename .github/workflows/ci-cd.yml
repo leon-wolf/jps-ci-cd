@@ -4,26 +4,23 @@ on:
   push:
     branches: [ main ]
 jobs:
-  build-push-gcr:
-    name: Build and Deploy
+  push_to_registry:
+    name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      
+      - name: Log in to Docker Hub
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
-    - name: Install
-      run: npm install
+      - name: Build docker image
+        run: docker build . -t leon3103/jps-ci-ci:dev
 
-    - name: Build
-      run: npm run build
-
-    - name: Test
-      run: npm run test
-
-    - name: Deploy
-      run: |
-        git config --global user.name 'leon-wolf'
-        git config --global user.email 'leonwolf.oldb@gmail.com'
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}    
-        npm run deploy
+        
+      - name: docker push
+        run: docker push ${{secrets.DOCKER_USER}/jps-ci-cd:dev
