@@ -19,7 +19,7 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
       - name: Build docker image
-        run: docker build . -t leon3103/jps-ci-ci:dev
+        run: docker build . -t leon3103/jps-ci-cd:dev
 
         
       - name: docker push
